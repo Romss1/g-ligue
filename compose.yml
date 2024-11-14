@@ -1,0 +1,31 @@
+services:
+  app:
+    container_name: node_gligue
+    image: node:22-alpine
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./src:/app/src
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    networks:
+      - dev
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    container_name: postgres_gligue
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    networks:
+      - dev
+  
+networks:
+  dev:

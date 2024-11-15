@@ -11,7 +11,7 @@ install:
 start:
 	@echo "Starting project"
 	@${compose} up -d
-	@echo "Let's go ! http://localhost:3001"
+	@echo "Let's go ! http://localhost:3000"
 .PHONY: start
 
 stop:

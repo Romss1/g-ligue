@@ -21,7 +21,7 @@ services:
       - POSTGRES_PASSWORD=postgres
     container_name: postgres_gligue
     volumes:
-      - ./pgdata:/var/lib/postgresql/data
+      - db-gligue:/var/lib/postgresql/data
     ports:
       - '5432:5432'
     networks:
@@ -29,3 +29,6 @@ services:
   
 networks:
   dev:
+
+volumes:
+  db-gligue:

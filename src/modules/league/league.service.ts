@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateLeagueDto } from './dto/create-league.dto';
+import { CreateLeagueDto } from './dto/request/create-league.dto';
 import { League } from './entities/league.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';

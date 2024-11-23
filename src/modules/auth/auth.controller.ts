@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  HttpCode,
   Post,
   Res,
   UnauthorizedException,
@@ -12,14 +13,20 @@ import { Response } from 'express';
 
 @Controller('user')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+) {}
 
   @Post('register')
-  async register(@Body() createUserDto: CreateUserDto) {
-    return this.authService.createUser(createUserDto);
+  @HttpCode(204)
+  async register(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
+    this.authService.createUser(createUserDto);
+
+    return res.send({ message: 'You\'\re register'});
   }
 
   @Post('login')
+  @HttpCode(200)
   async login(@Body() loginDto: LoginDto, @Res() res: Response) {
     const user = await this.authService.logUser(loginDto);
     if (user) {

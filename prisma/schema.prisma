@@ -1,0 +1,112 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_URL")
+}
+
+model User {
+  id String @id @default(cuid())
+  email String @unique
+  password String
+  lastName String
+  firstName String
+  role Role @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("user")
+}
+
+model Club {
+  id String @id @default(cuid())
+  name String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("club")
+}
+
+model League {
+  id String @id @default(cuid())
+  name String
+  description String?
+  divisions Division[]
+  isAuthorizedMidSeasonRegistration Boolean @default(false)
+  numberOfPlayerByDivision Int @default(5)
+  startDate DateTime
+  endDate DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("league")
+}
+
+model Division {
+  id String @id @default(cuid())
+  level Int
+  league League @relation(fields: [leagueId], references: [id])
+  leagueId String @unique
+  rounds Round[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("division")
+}
+
+model Round {
+  id String @id @default(cuid())
+  roundNumber Int
+  startDate DateTime
+  endDate DateTime
+  roundState LifeCycleStatus @default(IN_PROGRESS)
+  isCurrent Boolean
+  division Division @relation(fields: [divisionId], references: [id])
+  divisionId String @unique
+  players PlayersOnRounds[]
+  matches Match[]
+  
+  @@map("round")
+}
+
+model Match {
+  id String @id @default(cuid())
+  round Round @relation(fields: [roundId], references: [id])
+  roundId String @unique
+
+  @@map("match")
+}
+
+model Player {
+  id String @id @default(cuid())
+  rounds PlayersOnRounds[]
+
+  @@map("player")
+}
+
+model PlayersOnRounds {
+  player Player @relation(fields: [playerId], references: [id])
+  playerId String @unique
+  round Round @relation(fields: [roundId], references: [id])
+  roundId String @unique
+
+  @@id([playerId, roundId])
+  @@map("player_round")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum LifeCycleStatus {
+  IN_PROGRESS
+}

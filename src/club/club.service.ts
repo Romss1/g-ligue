@@ -2,13 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { CreateClubRequestDTO } from './dto/create.club.request.dto';
 import { ClubResponseDTO } from './dto/club.response.dto';
+import { ClubRoleType } from '@prisma/client';
 
 @Injectable()
 export class ClubService {
     constructor(private readonly prisma: PrismaService){}
 
-    async createClub(createClubRequestDto: CreateClubRequestDTO) {
+    async createClub(createClubRequestDto: CreateClubRequestDTO): Promise<string> {
         const club = await this.prisma.club.create({ data: createClubRequestDto })
+
+        return club.id
     }
 
     async getAllClubs(): Promise<ClubResponseDTO[]> {
@@ -22,7 +25,7 @@ export class ClubService {
         ));
     }
 
-    async getClubByUuid(uuid: string) {
+    async getClubByUuid(uuid: string): Promise<ClubResponseDTO> {
         const club = await this.prisma.club.findUnique({
             where: {
                 id: uuid,
@@ -35,5 +38,15 @@ export class ClubService {
             club.createdAt,
             club.updatedAt
         )
+    }
+
+    async assignClubRole(userId: string, clubId: string, role: ClubRoleType) {
+        const clubRole = await this.prisma.clubRole.create({
+            data: {
+                userId,
+                clubId,
+                role
+            }
+        })
     }
 }

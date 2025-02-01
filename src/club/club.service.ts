@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { CreateClubRequestDTO } from './dto/create.club.request.dto';
 import { ClubResponseDTO } from './dto/club.response.dto';
-import { ClubRoleType } from '@prisma/client';
+import { Role } from '@prisma/client';
 import { CreateJoinClubRequestDTO } from '../join-club/dto/create.join.club.request.dto';
 
 @Injectable()
@@ -41,7 +41,7 @@ export class ClubService {
         )
     }
 
-    async assignClubRole(userId: string, clubId: string, role: ClubRoleType): Promise<void> {
+    async assignClubRole(userId: string, clubId: string, role: Role): Promise<void> {
         const clubRole = await this.prisma.clubRole.create({
             data: {
                 userId,

@@ -9,7 +9,7 @@ import { CreateJoinClubRequestDTO } from './dto/create.join.club.request.dto';
 export class JoinClubController {
     constructor(private readonly joinClubRequestService: JoinClubService){}
 
-    @Auth(Role.USER)
+    @Auth(Role.MEMBER)
     @Post()
     async create(
         @Body() createJoinClubRequestDto: CreateJoinClubRequestDTO,
@@ -20,7 +20,7 @@ export class JoinClubController {
 
     // TODO Ajouter le check: update seulement si le status = Pending
     // TODO: Avoir un Role CLUB_ADMIN
-    @Auth(Role.USER)
+    @Auth(Role.MEMBER)
     @Patch(':id/accept')
     async acceptJoin(
         @Param('id') id: string
@@ -30,7 +30,7 @@ export class JoinClubController {
 
     // TODO Ajouter le check: update seulement si le status = Pending
     // TODO: Avoir un Role CLUB_ADMIN
-    @Auth(Role.USER)
+    @Auth(Role.MEMBER)
     @Patch(':id/reject')
     async rejectJoin(
         @Param('id') id: string

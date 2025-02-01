@@ -19,7 +19,6 @@ model User {
   password String
   lastName String
   firstName String
-  role Role @default(USER)
   clubRoles ClubRole[]
   clubJoinRequests ClubJoinRequest[]
   createdAt DateTime @default(now())
@@ -45,7 +44,7 @@ model ClubRole {
   userId String
   club Club @relation(fields: [clubId], references: [id], onDelete: Cascade)
   clubId String
-  role ClubRoleType
+  role Role
 
   @@unique([userId, clubId])
   @@map("club_role")
@@ -132,11 +131,6 @@ model ClubJoinRequest {
 }
 
 enum Role {
-  USER
-  ADMIN
-}
-
-enum ClubRoleType {
   MEMBER
   ADMIN
 }

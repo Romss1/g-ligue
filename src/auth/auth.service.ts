@@ -26,15 +26,22 @@ export class AuthService {
     async login(loginRequestDto: LoginRequestDTO): Promise<any> {
 
         const user = await this.prisma.user.findUnique({
-            where: { email: loginRequestDto.email }
+            where: { email: loginRequestDto.email },
+            include: {
+                clubRoles: true,
+            }
         });
 
         if (user && !(await bcrypt.compare(loginRequestDto.password, user.password))) {
             throw new UnauthorizedException;
         }
         
- 
-        const payload = { id: user.id, email: user.email, lastName: user.lastName, firstName: user.firstName, roles: user.role };
+        const roles = user.clubRoles.reduce((acc, { clubId, role }) => {
+            acc[clubId] = role;
+            return acc;
+        }, {});
+
+        const payload = { id: user.id, email: user.email, lastName: user.lastName, firstName: user.firstName, clubRoles: roles };
 
         return new LoginResponseDTO(this.jwtService.sign(payload));
     }

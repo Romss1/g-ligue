@@ -20,7 +20,8 @@ model User {
   lastName String
   firstName String
   role Role @default(USER)
-  clubRoles ClubRole[] 
+  clubRoles ClubRole[]
+  clubJoinRequests ClubJoinRequest[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -31,6 +32,7 @@ model Club {
   id String @id @default(cuid())
   name String @unique
   clubRoles ClubRole[]
+  clubJoinRequests ClubJoinRequest[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -116,6 +118,19 @@ model PlayersOnRounds {
   @@map("player_round")
 }
 
+model ClubJoinRequest {
+  id String @id @default(cuid())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  club Club @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  clubId String
+  status JoinClubRequestStatus @default(PENDING)
+  message String?
+
+  @@unique([userId, clubId])
+  @@map("club_join_request")
+}
+
 enum Role {
   USER
   ADMIN
@@ -128,4 +143,11 @@ enum ClubRoleType {
 
 enum LifeCycleStatus {
   IN_PROGRESS
+}
+
+
+enum JoinClubRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }

@@ -45,9 +45,15 @@ prisma-generate:
 	@${exec} -c "npx prisma generate"
 .PHONY: prisma-generate
 
+prisma-generate-local:
+	@npx prisma generate
+.PHONY: prisma-generate-local
+
 prisma-migrate-dev:
 	@${exec} -c "npx prisma migrate dev"
 .PHONY: prisma-migrate-dev
+
+refresh-db-model: install prisma-generate prisma-push-db prisma-generate-local
 
 #-------------------------------------------------------------------------------------------------------------------------
 # Variables

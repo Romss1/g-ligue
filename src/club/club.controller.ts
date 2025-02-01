@@ -2,9 +2,9 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ClubService } from './club.service';
 import { CreateClubRequestDTO } from './dto/create.club.request.dto';
 import { Auth } from 'src/auth/auth.decorator';
-import { ClubRoleType, Role, User as UserType} from '@prisma/client';
+import { ClubRoleType, Role, User} from '@prisma/client';
 import { ClubResponseDTO } from './dto/club.response.dto';
-import { User } from 'src/user/user.decorator';
+import { UserDecorator } from 'src/user/user.decorator';
 
 @Controller('clubs')
 export class ClubController {
@@ -14,10 +14,10 @@ export class ClubController {
     @Post()
     async create(
         @Body() createClubRequestDto: CreateClubRequestDTO,
-        @User() user: UserType,
+        @UserDecorator() { id }: User,
     ) {
         const clubId: string = await this.clubService.createClub(createClubRequestDto);
-        await this.clubService.assignClubRole(user.id, clubId, ClubRoleType.ADMIN)
+        this.clubService.assignClubRole(id, clubId, ClubRoleType.ADMIN)
     }
 
     @Auth(Role.USER)

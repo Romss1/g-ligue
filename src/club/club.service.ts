@@ -40,7 +40,7 @@ export class ClubService {
         )
     }
 
-    async assignClubRole(userId: string, clubId: string, role: ClubRoleType) {
+    async assignClubRole(userId: string, clubId: string, role: ClubRoleType): Promise<void> {
         const clubRole = await this.prisma.clubRole.create({
             data: {
                 userId,

@@ -5,6 +5,9 @@ import { PrismaService } from 'src/prisma.service';
 
 @Module({
   controllers: [ClubController],
-  providers: [ClubService, PrismaService]
+  providers: [
+    ClubService,
+    PrismaService
+  ]
 })
 export class ClubModule {}

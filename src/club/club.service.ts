@@ -3,6 +3,7 @@ import { PrismaService } from 'src/prisma.service';
 import { CreateClubRequestDTO } from './dto/create.club.request.dto';
 import { ClubResponseDTO } from './dto/club.response.dto';
 import { ClubRoleType } from '@prisma/client';
+import { CreateJoinClubRequestDTO } from '../join-club/dto/create.join.club.request.dto';
 
 @Injectable()
 export class ClubService {

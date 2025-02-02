@@ -7,15 +7,19 @@ import { LoginResponseDTO } from './dto/login/login.response.dto';
 
 @Controller('auth')
 export class AuthController {
-    constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
-    @Post('register')
-    async register(@Body() registerRequestDto: RegisterRequestDTO): Promise<RegisterResponseDTO> {
-        return this.authService.register(registerRequestDto);
-    }
+  @Post('register')
+  async register(
+    @Body() registerRequestDto: RegisterRequestDTO,
+  ): Promise<RegisterResponseDTO> {
+    return this.authService.register(registerRequestDto);
+  }
 
-    @Post('login')
-    async login(@Body() loginRequestDto: LoginRequestDTO): Promise<LoginResponseDTO> {
-        return this.authService.login(loginRequestDto);
-    }
+  @Post('login')
+  async login(
+    @Body() loginRequestDto: LoginRequestDTO,
+  ): Promise<LoginResponseDTO> {
+    return this.authService.login(loginRequestDto);
+  }
 }

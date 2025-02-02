@@ -1,4 +1,3 @@
 export class CreateClubRequestDTO {
-    name: string
-    
+  name: string;
 }

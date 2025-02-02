@@ -4,7 +4,7 @@ import { JoinClubService } from './join-club.service';
 import { PrismaService } from 'src/prisma.service';
 
 @Module({
-    controllers: [JoinClubController],
+  controllers: [JoinClubController],
     providers: [
         JoinClubService,
         PrismaService

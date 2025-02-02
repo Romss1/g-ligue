@@ -1,4 +1,3 @@
 export class RegisterResponseDTO {
-    
-    constructor(private readonly id: string) {}
+  constructor(private readonly id: string) {}
 }

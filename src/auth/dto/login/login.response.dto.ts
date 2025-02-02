@@ -1,3 +1,3 @@
 export class LoginResponseDTO {
-    constructor(private token: string){}
+  constructor(private token: string) {}
 }

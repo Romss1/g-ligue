@@ -1,40 +1,36 @@
 import { Body, Controller, Param, Patch, Post } from '@nestjs/common';
 import { JoinClubService } from './join-club.service';
 import { Auth } from 'src/auth/auth.decorator';
-import { Role, User } from '@prisma/client';
+import { User } from '@prisma/client';
 import { UserDecorator } from 'src/user/user.decorator';
 import { CreateJoinClubRequestDTO } from './dto/create.join.club.request.dto';
+import { Role } from 'src/auth/enum/role.enum';
 
 @Controller('join-clubs')
 export class JoinClubController {
-    constructor(private readonly joinClubRequestService: JoinClubService){}
+  constructor(private readonly joinClubRequestService: JoinClubService) {}
 
-    @Auth(Role.MEMBER)
-    @Post()
-    async create(
-        @Body() createJoinClubRequestDto: CreateJoinClubRequestDTO,
-        @UserDecorator() { id }: User
-    ): Promise<void> {
-        return this.joinClubRequestService.requestToJoinClub(createJoinClubRequestDto, id);
-    }
+  @Auth(Role.USER)
+  @Post()
+  async create(
+    @Body() createJoinClubRequestDto: CreateJoinClubRequestDTO,
+    @UserDecorator() { id }: User,
+  ): Promise<void> {
+    return this.joinClubRequestService.requestToJoinClub(
+      createJoinClubRequestDto,
+      id,
+    );
+  }
 
-    // TODO Ajouter le check: update seulement si le status = Pending
-    // TODO: Avoir un Role CLUB_ADMIN
-    @Auth(Role.MEMBER)
-    @Patch(':id/accept')
-    async acceptJoin(
-        @Param('id') id: string
-    ): Promise<void> {
-        return this.joinClubRequestService.acceptToJoinClub(id);
-    }
+  @Auth(Role.ADMIN)
+  @Patch(':clubId/:joinClubId/accept')
+  async acceptJoin(@Param('joinClubId') joinClubId: string): Promise<void> {
+    return this.joinClubRequestService.acceptToJoinClub(joinClubId);
+  }
 
-    // TODO Ajouter le check: update seulement si le status = Pending
-    // TODO: Avoir un Role CLUB_ADMIN
-    @Auth(Role.MEMBER)
-    @Patch(':id/reject')
-    async rejectJoin(
-        @Param('id') id: string
-    ): Promise<void> {
-        return this.joinClubRequestService.rejectToJoinClub(id);
-    }
+  @Auth(Role.ADMIN)
+  @Patch(':clubId/:joinClubId/reject')
+  async rejectJoin(@Param('joinClubId') joinClubId: string): Promise<void> {
+    return this.joinClubRequestService.rejectToJoinClub(joinClubId);
+  }
 }

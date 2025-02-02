@@ -1,4 +1,4 @@
 export class CreateJoinClubRequestDTO {
-    clubId: string;
-    message: string|null;
+  clubId: string;
+  message: string | null;
 }

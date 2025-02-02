@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { ClubService } from './club.service';
 import { CreateClubRequestDTO } from './dto/create.club.request.dto';
 import { User } from '@prisma/client';
@@ -6,6 +6,7 @@ import { ClubResponseDTO } from './dto/club.response.dto';
 import { UserDecorator } from 'src/user/user.decorator';
 import { Auth } from 'src/auth/auth.decorator';
 import { Role } from 'src/auth/enum/role.enum';
+import { UpdateClubDTO } from './dto/update.club.dto';
 
 @Controller('clubs')
 export class ClubController {
@@ -34,5 +35,14 @@ export class ClubController {
     @Param('clubId') clubId: string,
   ): Promise<ClubResponseDTO> {
     return await this.clubService.getClubById(clubId);
+  }
+
+  @Auth(Role.ADMIN)
+  @Patch(':clubId')
+  async updateClub(
+    @Param('clubId') clubId: string,
+    @Body() updateClubDto: UpdateClubDTO
+  ): Promise<void> {
+    return await this.clubService.updateClub(clubId, updateClubDto);
   }
 }

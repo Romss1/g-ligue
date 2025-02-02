@@ -33,6 +33,7 @@ model Club {
   description String?
   address String?
   city String?
+  leagues League[]
   clubRoles ClubRole[]
   membershipRequests MembershipRequest[]
   createdAt DateTime @default(now())
@@ -57,6 +58,8 @@ model League {
   id String @id @default(cuid())
   name String
   description String?
+  club Club @relation(fields: [clubId], references: [id])
+  clubId String
   divisions Division[]
   isAuthorizedMidSeasonRegistration Boolean @default(false)
   numberOfPlayerByDivision Int @default(5)

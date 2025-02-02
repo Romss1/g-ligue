@@ -1,23 +1,24 @@
 import { HttpCode, HttpException, Injectable } from '@nestjs/common';
-import { CreateJoinClubRequestDTO } from './dto/create.join.club.request.dto';
+import { CreateMembershipRequestDTO } from './dto/create.membership.request.dto';
 import { PrismaService } from 'src/prisma.service';
 import { ClubJoinRequest, JoinClubRequestStatus, Prisma } from '@prisma/client';
 import { Role } from 'src/auth/enum/role.enum';
 
 @Injectable()
-export class JoinClubService {
+export class MembershipRequestService {
   constructor(private readonly prisma: PrismaService) { }
 
-  async requestToJoinClub(
-    createJoinClubRequestDTO: CreateJoinClubRequestDTO,
+  async createRequest(
+    clubId: string,
     userId: string,
+    message: string|null
   ): Promise<void> {
     try {
       await this.prisma.clubJoinRequest.create({
         data: {
           userId: userId,
-          clubId: createJoinClubRequestDTO.clubId,
-          message: createJoinClubRequestDTO.message,
+          clubId: clubId,
+          message: message,
         },
       });
     } catch {
@@ -25,7 +26,7 @@ export class JoinClubService {
     }
   }
 
-  async acceptToJoinClub(clubJoinRequestId: string): Promise<void> {
+  async acceptRequest(clubJoinRequestId: string): Promise<void> {
     try {
       const joinClubRequest: ClubJoinRequest = await this.prisma.clubJoinRequest.update({
         where: {
@@ -49,7 +50,7 @@ export class JoinClubService {
     }
   }
 
-  async rejectToJoinClub(joinClubRequestId: string): Promise<void> {
+  async rejectRequest(joinClubRequestId: string): Promise<void> {
     try {
       await this.prisma.clubJoinRequest.update({
         where: {

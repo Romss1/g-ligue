@@ -26,7 +26,7 @@ export class ClubService {
     );
   }
 
-  async getClubByUuid(uuid: string): Promise<ClubResponseDTO> {
+  async getClubById(uuid: string): Promise<ClubResponseDTO> {
     const club = await this.prisma.club.findUnique({
       where: {
         id: uuid,

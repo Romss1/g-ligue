@@ -1,10 +1,11 @@
-import { Body, Controller, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { MembershipRequestService } from './membership.request.service';
 import { Auth } from 'src/auth/auth.decorator';
 import { User } from '@prisma/client';
 import { UserDecorator } from 'src/user/user.decorator';
 import { CreateMembershipRequestDTO } from './dto/create.membership.request.dto';
 import { Role } from 'src/auth/enum/role.enum';
+import { MembershipRequestResponseDTO } from './dto/response/membership.request.dto';
 
 @Controller('clubs/:clubId/membership-requests')
 export class MembershipRequestController {
@@ -22,6 +23,12 @@ export class MembershipRequestController {
       userId,
       message
     );
+  }
+
+  @Auth(Role.ADMIN)
+  @Get()
+  async getAllMembershipRequests(): Promise<MembershipRequestResponseDTO[]> {
+    return await this.membershipRequestService.getAllMembershipRequests();
   }
 
   @Auth(Role.ADMIN)

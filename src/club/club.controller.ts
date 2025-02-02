@@ -30,9 +30,9 @@ export class ClubController {
 
   @Auth(Role.MEMBER)
   @Get(':clubId')
-  async getClubByUuid(
+  async getClubById(
     @Param('clubId') clubId: string,
   ): Promise<ClubResponseDTO> {
-    return await this.clubService.getClubByUuid(clubId);
+    return await this.clubService.getClubById(clubId);
   }
 }

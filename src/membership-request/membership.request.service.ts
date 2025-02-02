@@ -1,8 +1,9 @@
 import { HttpCode, HttpException, Injectable } from '@nestjs/common';
-import { CreateMembershipRequestDTO } from './dto/create.membership.request.dto';
 import { PrismaService } from 'src/prisma.service';
-import { ClubJoinRequest, JoinClubRequestStatus, Prisma } from '@prisma/client';
+import { MembershipRequest, MembershipRequestStatus, Prisma, User } from '@prisma/client';
 import { Role } from 'src/auth/enum/role.enum';
+import { MembershipRequestResponseDTO } from './dto/response/membership.request.dto';
+import { UserInformationsDTO } from './dto/response/user.informations.dto';
 
 @Injectable()
 export class MembershipRequestService {
@@ -14,7 +15,7 @@ export class MembershipRequestService {
     message: string|null
   ): Promise<void> {
     try {
-      await this.prisma.clubJoinRequest.create({
+      await this.prisma.membershipRequest.create({
         data: {
           userId: userId,
           clubId: clubId,
@@ -26,15 +27,32 @@ export class MembershipRequestService {
     }
   }
 
-  async acceptRequest(clubJoinRequestId: string): Promise<void> {
+  async getAllMembershipRequests(): Promise<MembershipRequestResponseDTO[]> {
+    const membershipRequests = await this.prisma.membershipRequest.findMany({
+      include: { user: true }
+    });
+
+    return membershipRequests.map(
+      (membershipRequest) =>
+        new MembershipRequestResponseDTO(
+          membershipRequest.id,
+          new UserInformationsDTO(membershipRequest.user.id, membershipRequest.user.lastName, membershipRequest.user.firstName),
+          membershipRequest.message,
+          membershipRequest.createdAt,
+          membershipRequest.updatedAt
+        )
+    )
+  }
+
+  async acceptRequest(requestId: string): Promise<void> {
     try {
-      const joinClubRequest: ClubJoinRequest = await this.prisma.clubJoinRequest.update({
+      const joinClubRequest = await this.prisma.membershipRequest.update({
         where: {
-          id: clubJoinRequestId,
-          status: JoinClubRequestStatus.PENDING
+          id: requestId,
+          status: MembershipRequestStatus.PENDING
         },
         data: {
-          status: JoinClubRequestStatus.APPROVED,
+          status: MembershipRequestStatus.APPROVED,
         },
       });
 
@@ -50,15 +68,15 @@ export class MembershipRequestService {
     }
   }
 
-  async rejectRequest(joinClubRequestId: string): Promise<void> {
+  async rejectRequest(requestId: string): Promise<void> {
     try {
-      await this.prisma.clubJoinRequest.update({
+      await this.prisma.membershipRequest.update({
         where: {
-          id: joinClubRequestId,
-          status: JoinClubRequestStatus.PENDING
+          id: requestId,
+          status: MembershipRequestStatus.PENDING
         },
         data: {
-          status: JoinClubRequestStatus.REJECTED,
+          status: MembershipRequestStatus.REJECTED,
         },
       });
     } catch {

@@ -41,7 +41,23 @@ export class MembershipRequestService {
           membershipRequest.createdAt,
           membershipRequest.updatedAt
         )
-    )
+    );
+  }
+
+  async getMembershipRequestById(requestId: string):Promise<MembershipRequestResponseDTO>
+  {
+    const membershipRequest = await this.prisma.membershipRequest.findUnique({
+      where: { id: requestId},
+      include: { user: true }
+    })
+
+    return new MembershipRequestResponseDTO(
+      membershipRequest.id,
+          new UserInformationsDTO(membershipRequest.user.id, membershipRequest.user.lastName, membershipRequest.user.firstName),
+          membershipRequest.message,
+          membershipRequest.createdAt,
+          membershipRequest.updatedAt
+    );
   }
 
   async acceptRequest(requestId: string): Promise<void> {

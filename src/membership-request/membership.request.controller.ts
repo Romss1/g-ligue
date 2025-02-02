@@ -32,6 +32,12 @@ export class MembershipRequestController {
   }
 
   @Auth(Role.ADMIN)
+  @Get(':requestId')
+  async getMembershipRequestById(@Param('requestId') requestId: string): Promise<MembershipRequestResponseDTO> {
+    return await this.membershipRequestService.getMembershipRequestById(requestId);
+  }
+
+  @Auth(Role.ADMIN)
   @Patch(':requestId/accept')
   async acceptRequest(@Param('requestId') requestId: string): Promise<void> {
     return this.membershipRequestService.acceptRequest(requestId);

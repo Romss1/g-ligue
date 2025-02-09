@@ -64,5 +64,5 @@ refresh-db-model: install prisma-generate prisma-push-db prisma-generate-local
 #-------------------------------------------------------------------------------------------------------------------------
 
 compose = docker compose
-node_service_name = node_gligue-v2
-exec = docker exec -it node_gligue-v2 sh
+node_service_name = node_gligue_back
+exec = docker exec -it node_gligue_back sh

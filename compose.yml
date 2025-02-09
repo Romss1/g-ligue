@@ -1,6 +1,6 @@
 services:
   app:
-    container_name: node_gligue-v2
+    container_name: node_gligue_back
     image: node:22-alpine
     build:
       context: .
@@ -17,13 +17,13 @@ services:
     command: npm run start:debug
 
   db:
+    container_name: postgres_gligue
     image: postgres
     restart: always
     environment:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_NAME=postgres
       - POSTGRES_DB=postgres
-    container_name: postgresglique
     volumes:
       - db-gligue:/var/lib/postgresql/data
     ports:
